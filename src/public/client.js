@@ -64,10 +64,26 @@ const renderRoversList = (rovers, selectedRover) => {
             `;
 };
 
+// Pure function that renders selecte rover's base data
+const renderRoverBaseData = (roverName) => {
+  if (roverName !== '') {
+    const baseData = store.latestPhotos.image.latest_photos[0];
+    return `
+              <ul>
+                <li>Landing date: ${baseData.rover.landing_date}</li>
+                <li>Launch date: ${baseData.rover.launch_date}</li>
+                <li>Status: ${baseData.rover.status}</li>
+                <li>Most recent available photos: ${baseData.earth_date}</li>
+              </ul>
+            `;
+  }
+};
+
 // Pure function that renders selected rover heading
 const renderSelectedRoverHeader = (roverName) => {
   if (roverName !== '') {
     return `
+      <h3>You selected ${roverName}!</h3>
       <h3>Let's see what ${roverName}'s got for you:)</h3>
         `;
   }
@@ -89,6 +105,7 @@ const App = (state) => {
                 <h3>Choose the rover from the list below:</h3>
                 ${renderRoversList(rovers, selectedRover)}
                 ${renderSelectedRoverHeader(selectedRover)}
+                ${renderRoverBaseData(selectedRover)}
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
                     the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
@@ -117,7 +134,7 @@ const selectRover = () => {
   fetch(`http://localhost:3000/curiosity`)
     .then((res) => res.json())
     .then((photos) => {
-      const latestPhotos = photos.image.latest_photos;
+      const latestPhotos = photos; // .image.latest_photos[0].img_src;
       console.log(latestPhotos);
       updateStore({ latestPhotos });
     }); // updateStore({ latestPhotos }));
