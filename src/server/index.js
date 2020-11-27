@@ -22,11 +22,22 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 /**
  * Routes Definitions
  */
-// example API call
+// API call - photo of the day
 app.get('/apod', async (req, res) => {
   try {
     const image = await fetch(
       `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
+    ).then((res) => res.json());
+    res.send({ image });
+  } catch (err) {
+    console.log('error:', err);
+  }
+});
+// API call - rover's photos
+app.get('/curiosity', async (req, res) => {
+  try {
+    const image = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=${process.env.API_KEY}`
     ).then((res) => res.json());
     res.send({ image });
   } catch (err) {

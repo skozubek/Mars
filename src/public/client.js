@@ -2,6 +2,7 @@
 let store = {
   apod: '',
   selectedRover: '',
+  latestPhotos: {},
   // rovers list is immutable
   rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
 };
@@ -15,7 +16,6 @@ const updateStore = (newState) => {
 };
 
 const render = async (root, state) => {
-  console.log(`In render ${state.selectedRover}`);
   root.innerHTML = App(state);
 };
 // Pure function that renders header
@@ -113,7 +113,14 @@ window.addEventListener('load', () => {
 const selectRover = () => {
   const selectedRover = document.getElementById('rovers').value;
   updateStore({ selectedRover });
-  console.log(`dupa ${store.selectedRover}`);
+  console.log(`You selected ${store.selectedRover}`);
+  fetch(`http://localhost:3000/curiosity`)
+    .then((res) => res.json())
+    .then((photos) => {
+      const latestPhotos = photos.image.latest_photos;
+      console.log(latestPhotos);
+      updateStore({ latestPhotos });
+    }); // updateStore({ latestPhotos }));
 };
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
