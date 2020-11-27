@@ -33,13 +33,14 @@ app.get('/apod', async (req, res) => {
     console.log('error:', err);
   }
 });
-// API call - rover's photos
-app.get('/curiosity', async (req, res) => {
+// API call - rover's latest photos
+app.get('/rovers', async (req, res) => {
   try {
-    const image = await fetch(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=${process.env.API_KEY}`
-    ).then((res) => res.json());
-    res.send({ image });
+    const { name } = req.query;
+    const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${name}/latest_photos?api_key=${process.env.API_KEY}`;
+    console.log(url);
+    const data = await fetch(url).then((res) => res.json());
+    res.send({ data });
   } catch (err) {
     console.log('error:', err);
   }

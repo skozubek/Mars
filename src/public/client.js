@@ -4,7 +4,7 @@ let store = {
   selectedRover: '',
   latestPhotos: {},
   // rovers list is immutable
-  rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
+  rovers: Immutable.List(['curiosity', 'opportunity', 'spirit']),
 };
 
 // add our markup to the page
@@ -24,8 +24,7 @@ const renderHeader = () => `
     `;
 // Pure function that renders list of rovers to choose from
 const renderRoversList = (rovers, selectedRover) => {
-  console.log(`in render ${selectedRover}`);
-  if (selectedRover === 'Curiosity') {
+  if (selectedRover === 'curiosity') {
     return `
               <select name="rovers" id="rovers" onchange="selectRover()">
                 <option value="${rovers.get(0)}">${rovers.get(0)}</option>
@@ -35,7 +34,7 @@ const renderRoversList = (rovers, selectedRover) => {
             `;
   }
 
-  if (selectedRover === 'Opportunity') {
+  if (selectedRover === 'opportunity') {
     return `
               <select name="rovers" id="rovers" onchange="selectRover()">
                 <option value="${rovers.get(1)}">${rovers.get(1)}</option>
@@ -44,7 +43,7 @@ const renderRoversList = (rovers, selectedRover) => {
               </select>
             `;
   }
-  if (selectedRover === 'Spirit') {
+  if (selectedRover === 'spirit') {
     return `
               <select name="rovers" id="rovers" onchange="selectRover()">
                 <option value="${rovers.get(2)}">${rovers.get(2)}</option>
@@ -75,8 +74,12 @@ const renderRoverBaseData = (roverName) => {
                 <li>Status: ${baseData.rover.status}</li>
                 <li>Most recent available photos: ${baseData.earth_date}</li>
               </ul>
+              <h3>Let's see what are ${roverName}'s latest photos</h3>
             `;
   }
+  return `
+        <h1>Hello!</h1>
+    `;
 };
 
 // Pure function that renders selected rover heading
@@ -84,7 +87,6 @@ const renderSelectedRoverHeader = (roverName) => {
   if (roverName !== '') {
     return `
       <h3>You selected ${roverName}!</h3>
-      <h3>Let's see what ${roverName}'s got for you:)</h3>
         `;
   }
 
@@ -96,8 +98,6 @@ const renderSelectedRoverHeader = (roverName) => {
 // create content
 const App = (state) => {
   const { rovers, apod, selectedRover } = state;
-  console.log(`in App ${selectedRover}`);
-
   return `
         <header>${renderHeader()}</header>
         <main>
@@ -105,7 +105,7 @@ const App = (state) => {
                 <h3>Choose the rover from the list below:</h3>
                 ${renderRoversList(rovers, selectedRover)}
                 ${renderSelectedRoverHeader(selectedRover)}
-                ${renderRoverBaseData(selectedRover)}
+
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
                     the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
@@ -128,25 +128,27 @@ window.addEventListener('load', () => {
 
 // ------------------------------------------------------  COMPONENTS
 const selectRover = () => {
-  const selectedRover = document.getElementById('rovers').value;
-  updateStore({ selectedRover });
-  console.log(`You selected ${store.selectedRover}`);
-  fetch(`http://localhost:3000/curiosity`)
-    .then((res) => res.json())
-    .then((photos) => {
-      const latestPhotos = photos; // .image.latest_photos[0].img_src;
-      console.log(latestPhotos);
-      updateStore({ latestPhotos });
-    }); // updateStore({ latestPhotos }));
+  const selectedElement = document.getElementById('rovers');
+  if (selectedElement !== null) {
+    const selectedRover = selectedElement.value;
+    console.log(`selected rover: ${selectedRover}`);
+    updateStore({ selectedRover });
+    const url = new URL('http://localhost:3000/rovers');
+    url.searchParams.append('name', selectedRover);
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        const latestPhotos = data;
+        updateStore({ latestPhotos });
+      });
+  }
 };
+
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
   // If image does not already exist, or it is not from today -- request it again
   const today = new Date();
   const photodate = new Date(apod.date);
-  console.log(apod, photodate.getDate(), today.getDate());
-
-  console.log(photodate.getDate() === today.getDate());
   if (!apod || apod.date === today.getDate()) {
     getImageOfTheDay(store);
   }
