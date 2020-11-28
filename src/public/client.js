@@ -1,6 +1,5 @@
 // keeps the App state - mutable
 let store = {
-  apod: '',
   selectedRover: '',
   latestPhotos: '',
   // rovers list is immutable
@@ -102,7 +101,7 @@ const renderImages = (images) => {
 };
 // create content
 const App = () => {
-  const { rovers, apod, selectedRover, latestPhotos } = store;
+  const { rovers, selectedRover, latestPhotos } = store;
   if (selectedRover !== '' && latestPhotos !== '') {
     return `<header>${renderHeader(rovers, selectedRover)}</header>
             <main>
