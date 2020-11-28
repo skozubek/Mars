@@ -9,7 +9,7 @@ let store = {
 
 // add our markup to the page
 const root = document.getElementById('root');
-
+// function updates state
 const updateStore = (newState) => {
   store = Object.assign(store, newState);
   render(root, store);
@@ -18,10 +18,6 @@ const updateStore = (newState) => {
 const render = async (root, state) => {
   root.innerHTML = App(state);
 };
-// Pure function that renders header
-const renderHeader = () => `
-        <h1>Mars Rovers Dashboard</h1>
-    `;
 // Pure function that renders list of rovers to choose from
 const renderRoversList = (rovers, selectedRover) => {
   if (selectedRover === 'curiosity') {
@@ -33,7 +29,6 @@ const renderRoversList = (rovers, selectedRover) => {
               </select>
             `;
   }
-
   if (selectedRover === 'opportunity') {
     return `
               <select name="rovers" id="rovers" onchange="selectRover()">
@@ -52,7 +47,6 @@ const renderRoversList = (rovers, selectedRover) => {
               </select>
             `;
   }
-
   return `
               <select name="rovers" id="rovers" onchange="selectRover()">
                 <option value="">select rover</option>
@@ -62,18 +56,31 @@ const renderRoversList = (rovers, selectedRover) => {
               </select>
             `;
 };
+// Pure function that renders header
+const renderHeader = (rovers, selectedRover) => {
+  if (selectedRover !== '') {
+    return `<h1>Mars Rovers Dashboard</h1>
+            <h3>Choose the rover from the list below:</h3>
+            <div>${renderRoversList(rovers, selectedRover)}</div>
+            <h3>You selected ${selectedRover}!</h3>`;
+  }
+  return `<h1>Mars Rovers Dashboard</h1>
+        <h3>Choose the rover from the list below:</h3>
+        <div>${renderRoversList(rovers, selectedRover)}</div>
+    `;
+};
 
-// Pure function that renders selecte rover's base data
-const renderRoverBaseData = (roverName) => {
+// Pure function that renders selected rover's base data
+const renderRoverBaseData = (roverName, latestPhotos) => {
   if (roverName !== '') {
-    const baseData = store.latestPhotos.photos.latest_photos[0];
+    const baseData = latestPhotos.photos.latest_photos[0];
     return `
-              <ol>
+              <ul>
                 <li>Landing date: ${baseData.rover.landing_date}</li>
                 <li>Launch date: ${baseData.rover.launch_date}</li>
                 <li>Status: ${baseData.rover.status}</li>
                 <li>Most recent available photos: ${baseData.earth_date}</li>
-              </ol>
+              </ul>
               <h3>Let's see what are ${roverName}'s latest photos</h3>
             `;
   }
@@ -81,24 +88,10 @@ const renderRoverBaseData = (roverName) => {
         <h1>Hello!</h1>
     `;
 };
-
-// Pure function that renders selected rover heading
-const renderSelectedRoverHeader = (roverName) => {
-  if (roverName !== '') {
-    return `
-      <h3>You selected ${roverName}!</h3>
-        `;
-  }
-
-  return `
-        <h1>Hello!</h1>
-    `;
-};
-
 // Higher order function that returns function rendering images
 const renderImages = (images) => {
   if (images !== '') {
-    // USE MAP function to extract img urls from latestPhotos object
+    // USE MAP function to extract img urls from latestPhotos object in store
     const imgUrls = images.photos.latest_photos.map((img) => img.img_src);
 
     const renderImgUrls = () => {
@@ -116,12 +109,10 @@ const renderImages = (images) => {
 const App = () => {
   const { rovers, apod, selectedRover, latestPhotos } = store;
   if (selectedRover !== '' && latestPhotos !== '') {
-    return `<main>
+    return `<header>${renderHeader(rovers, selectedRover)}</header>
+            <main>
               <section>
-                <header>${renderHeader()}</header>
-                <div>${renderRoversList(rovers, selectedRover)}</div>
-                <div>${renderSelectedRoverHeader(selectedRover)}</div>
-                <div>${renderRoverBaseData(selectedRover)}</div>
+                <div>${renderRoverBaseData(selectedRover, latestPhotos)}</div>
                 <div>${renderImages(latestPhotos)()}</div>
               </section>
             </main>
@@ -129,11 +120,9 @@ const App = () => {
         `;
   }
   return `
-        <header>${renderHeader()}</header>
+        <header>${renderHeader(rovers, selectedRover)}</header>
         <main>
             <section>
-                <h3>Choose the rover from the list below:</h3>
-                <div>${renderRoversList(rovers, selectedRover)}</div>
                 <p>
                     Look!
                 </p>
