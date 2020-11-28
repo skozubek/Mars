@@ -132,15 +132,14 @@ const selectRover = () => {
   const selectedElement = document.getElementById('rovers');
   if (selectedElement) {
     const selectedRover = selectedElement.value;
-    updateStore({ selectedRover });
-    getRoverData(store);
+    getRoverData(store, selectedRover);
   }
 };
 // API call to get select rover's data
-const getRoverData = (state) => {
+const getRoverData = (state, selectedRover) => {
   const url = new URL('http://localhost:3000/rovers');
-  url.searchParams.append('name', state.selectedRover);
+  url.searchParams.append('name', selectedRover);
   fetch(url)
     .then((res) => res.json())
-    .then((latestPhotos) => updateStore({ latestPhotos }));
+    .then((latestPhotos) => updateStore({ latestPhotos, selectedRover }));
 };
