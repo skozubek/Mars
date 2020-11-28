@@ -90,11 +90,10 @@ const renderImages = (images) => {
   if (images !== '') {
     // USE MAP function to extract img urls from latestPhotos object in store
     const imgUrls = images.photos.latest_photos.map((img) => img.img_src);
-
+    // function rendering img html tags
     const renderImgUrls = () => {
       // USE MAP to convert urls into html tags
       const imgTags = imgUrls.map((url) => `<img src="${url}" />`);
-      console.log(imgUrls);
       return imgTags[0];
     };
     // return function rendering img html tags
