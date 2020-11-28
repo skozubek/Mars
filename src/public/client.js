@@ -2,7 +2,7 @@
 let store = {
   apod: '',
   selectedRover: '',
-  latestPhotos: {},
+  latestPhotos: '',
   // rovers list is immutable
   rovers: Immutable.List(['curiosity', 'opportunity', 'spirit']),
 };
@@ -20,7 +20,7 @@ const render = async (root, state) => {
 };
 // Pure function that renders header
 const renderHeader = () => `
-        <h1>Hello! Welocome on Mars Rovers Dashboard!</h1>
+        <h1>Mars Rovers Dashboard</h1>
     `;
 // Pure function that renders list of rovers to choose from
 const renderRoversList = (rovers, selectedRover) => {
@@ -66,14 +66,14 @@ const renderRoversList = (rovers, selectedRover) => {
 // Pure function that renders selecte rover's base data
 const renderRoverBaseData = (roverName) => {
   if (roverName !== '') {
-    const baseData = store.latestPhotos.image.latest_photos[0];
+    const baseData = store.latestPhotos.photos.latest_photos[0];
     return `
-              <ul>
+              <ol>
                 <li>Landing date: ${baseData.rover.landing_date}</li>
                 <li>Launch date: ${baseData.rover.launch_date}</li>
                 <li>Status: ${baseData.rover.status}</li>
                 <li>Most recent available photos: ${baseData.earth_date}</li>
-              </ul>
+              </ol>
               <h3>Let's see what are ${roverName}'s latest photos</h3>
             `;
   }
@@ -96,23 +96,24 @@ const renderSelectedRoverHeader = (roverName) => {
 };
 
 // create content
-const App = (state) => {
-  const { rovers, apod, selectedRover } = state;
+const App = () => {
+  const { rovers, apod, selectedRover, latestPhotos } = store;
+  if (selectedRover !== '' && latestPhotos !== '') {
+    return `<header>${renderHeader()}</header>
+            <div>${renderRoversList(rovers, selectedRover)}</div>
+            <div>${renderSelectedRoverHeader(selectedRover)}</div>
+            <div>${renderRoverBaseData(selectedRover)}</div>
+    `;
+  }
   return `
         <header>${renderHeader()}</header>
         <main>
             <section>
                 <h3>Choose the rover from the list below:</h3>
-                ${renderRoversList(rovers, selectedRover)}
-                ${renderSelectedRoverHeader(selectedRover)}
+                <div>${renderRoversList(rovers, selectedRover)}</div>
 
                 <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
+                    Look!
                 </p>
                 ${ImageOfTheDay(apod)}
             </section>
@@ -126,21 +127,13 @@ window.addEventListener('load', () => {
   render(root, store);
 });
 
-// ------------------------------------------------------  COMPONENTS
+// Handles changes in rovers select dropdown list
 const selectRover = () => {
   const selectedElement = document.getElementById('rovers');
-  if (selectedElement !== null) {
+  if (selectedElement) {
     const selectedRover = selectedElement.value;
-    console.log(`selected rover: ${selectedRover}`);
     updateStore({ selectedRover });
-    const url = new URL('http://localhost:3000/rovers');
-    url.searchParams.append('name', selectedRover);
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        const latestPhotos = data;
-        updateStore({ latestPhotos });
-      });
+    getRoverData(store);
   }
 };
 
@@ -163,19 +156,25 @@ const ImageOfTheDay = (apod) => {
   }
   return `
             <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
+            <p>${apod.image.explanation.substring(0, 100)}</p>
         `;
 };
 
 // ------------------------------------------------------  API CALLS
-
-// Example API call
+// API call to get select image of the day
 const getImageOfTheDay = (state) => {
   const { apod } = state;
 
   fetch(`http://localhost:3000/apod`)
     .then((res) => res.json())
     .then((apod) => updateStore({ apod }));
-
-  return data;
+  return apod;
+};
+// API call to get select rover's data
+const getRoverData = (state) => {
+  const url = new URL('http://localhost:3000/rovers');
+  url.searchParams.append('name', state.selectedRover);
+  fetch(url)
+    .then((res) => res.json())
+    .then((latestPhotos) => updateStore({ latestPhotos }));
 };
