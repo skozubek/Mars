@@ -58,16 +58,14 @@ const renderRoversList = (rovers, selectedRover) => {
 };
 // Pure function that renders header
 const renderHeader = (rovers, selectedRover) => {
+  const headers = `<h1>Mars Rovers Dashboard</h1>
+                   <h3>Choose the rover from the list below:</h3>
+                   <div>${renderRoversList(rovers, selectedRover)}</div>`;
   if (selectedRover !== '') {
-    return `<h1>Mars Rovers Dashboard</h1>
-            <h3>Choose the rover from the list below:</h3>
-            <div>${renderRoversList(rovers, selectedRover)}</div>
+    return `${headers}
             <h3>You selected ${selectedRover}!</h3>`;
   }
-  return `<h1>Mars Rovers Dashboard</h1>
-        <h3>Choose the rover from the list below:</h3>
-        <div>${renderRoversList(rovers, selectedRover)}</div>
-    `;
+  return `${headers}`;
 };
 
 // Pure function that renders selected rover's base data
