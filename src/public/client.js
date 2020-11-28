@@ -6,7 +6,6 @@ let store = {
   // rovers list is immutable
   rovers: Immutable.List(['curiosity', 'opportunity', 'spirit']),
 };
-
 // add our markup to the page
 const root = document.getElementById('root');
 // function updates state
@@ -127,19 +126,19 @@ const App = () => {
 window.addEventListener('load', () => {
   render(root, store);
 });
-// Handles changes in rovers select dropdown list
-const selectRover = () => {
-  const selectedElement = document.getElementById('rovers');
-  if (selectedElement) {
-    const selectedRover = selectedElement.value;
-    getRoverData(store, selectedRover);
-  }
-};
 // API call to get select rover's data
-const getRoverData = (state, selectedRover) => {
+const getRoverData = (selectedRover) => {
   const url = new URL('http://localhost:3000/rovers');
   url.searchParams.append('name', selectedRover);
   fetch(url)
     .then((res) => res.json())
     .then((latestPhotos) => updateStore({ latestPhotos, selectedRover }));
+};
+// Handles changes in rovers select dropdown list
+const selectRover = () => {
+  const selectedElement = document.getElementById('rovers');
+  if (selectedElement) {
+    const selectedRover = selectedElement.value;
+    getRoverData(selectedRover);
+  }
 };
