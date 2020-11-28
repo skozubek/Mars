@@ -95,15 +95,38 @@ const renderSelectedRoverHeader = (roverName) => {
     `;
 };
 
+// Higher order function that returns function rendering images
+const renderImages = (images) => {
+  if (images !== '') {
+    // USE MAP function to extract img urls from latestPhotos object
+    const imgUrls = images.photos.latest_photos.map((img) => img.img_src);
+
+    const renderImgUrls = () => {
+      // USE MAP to convert urls into html tags
+      const imgTags = imgUrls.map((url) => `<img src="${url}" />`);
+      console.log(imgUrls);
+      return imgTags[0];
+    };
+    // return function rendering img html tags
+    return renderImgUrls;
+  }
+};
+
 // create content
 const App = () => {
   const { rovers, apod, selectedRover, latestPhotos } = store;
   if (selectedRover !== '' && latestPhotos !== '') {
-    return `<header>${renderHeader()}</header>
-            <div>${renderRoversList(rovers, selectedRover)}</div>
-            <div>${renderSelectedRoverHeader(selectedRover)}</div>
-            <div>${renderRoverBaseData(selectedRover)}</div>
-    `;
+    return `<main>
+              <section>
+                <header>${renderHeader()}</header>
+                <div>${renderRoversList(rovers, selectedRover)}</div>
+                <div>${renderSelectedRoverHeader(selectedRover)}</div>
+                <div>${renderRoverBaseData(selectedRover)}</div>
+                <div>${renderImages(latestPhotos)()}</div>
+              </section>
+            </main>
+            <footer></footer>
+        `;
   }
   return `
         <header>${renderHeader()}</header>
@@ -111,7 +134,6 @@ const App = () => {
             <section>
                 <h3>Choose the rover from the list below:</h3>
                 <div>${renderRoversList(rovers, selectedRover)}</div>
-
                 <p>
                     Look!
                 </p>
