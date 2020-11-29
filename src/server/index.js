@@ -38,7 +38,6 @@ app.get('/rovers', async (req, res) => {
   try {
     const { name } = req.query;
     const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${name}/latest_photos?api_key=${process.env.API_KEY}`;
-    console.log(url);
     const photos = await fetch(url).then((res) => res.json());
     res.send({ photos });
   } catch (err) {

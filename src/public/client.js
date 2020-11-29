@@ -77,7 +77,7 @@ const renderRoverBaseData = (roverName, latestPhotos) => {
                 <li>Status: ${baseData.rover.status}</li>
                 <li>Most recent available photos: ${baseData.earth_date}</li>
               </ul>
-              <h3>Let's see what are ${roverName}'s latest photos</h3>
+              <h3>Let's see ${roverName}'s latest photos</h3>
             `;
   }
   return `
@@ -93,7 +93,7 @@ const renderImages = (images) => {
     const renderImgUrls = () => {
       // USE MAP to convert urls into html tags
       const imgTags = imgUrls.map((url) => `<img src="${url}" />`);
-      return imgTags.slice(0, 6).join('');
+      return imgTags.join('');
     };
     // return function rendering img html tags
     return renderImgUrls;
@@ -106,18 +106,19 @@ const App = () => {
     return `<header>${renderHeader(rovers, selectedRover)}</header>
             <main>
               <section>
-                <div>${renderRoverBaseData(selectedRover, latestPhotos)}</div>
+                <div id="base-data">${renderRoverBaseData(
+                  selectedRover,
+                  latestPhotos
+                )}</div>
                 <div>${renderImages(latestPhotos)()}</div>
               </section>
             </main>
-            <footer></footer>
+            <footer>Functional programming with JS</footer>
         `;
   }
   return `
         <header>${renderHeader(rovers, selectedRover)}</header>
-        <main>
-        </main>
-        <footer></footer>
+        <footer>Functional programming with JS</footer>
     `;
 };
 // listening for load event because page should load before any JS is called

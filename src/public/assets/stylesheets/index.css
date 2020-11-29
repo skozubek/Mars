@@ -5,21 +5,36 @@ body {
   flex-direction: column;
   font-family: Arial;
   min-height: 100vh;
+  background-image: url("../images/mars.jpg");
 }
 
 header {
   /* header styles */
+  background-color: azure;
+  padding: 10px;
 }
 
 main {
   flex: 1;
-  padding: 20px;
+}
+
+#base-data {
+  background-color: azure;
+  padding: 10px;
 }
 
 footer {
-
+  position: fixed;
+  bottom: 0px;
+  padding-top: 5px;
+  height: 40px;
+  margin: auto;
+  text-align: center;
+  width: 100%;
+  background-color: #fff;
+  font-size: 10px;
 }
-  /* select list styling based on article at: https://www.filamentgroup.com/lab/select-css.html */
+  /* select control styling based on article at: https://www.filamentgroup.com/lab/select-css.html */
 select {
 	display: block;
 	font-size: 16px;
@@ -72,16 +87,28 @@ h3{
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   /* use mobile */
+  img{
+    max-width: 50% !important;
+    padding: 5px !important;
+  }
 }
 
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
   /* use mobile */
+  img{
+    max-width: 30% !important;
+    padding: 5px !important;
+  }
 }
 
 /* -------------------  LARGE SCREENS  -------------- */
 
 @media (min-width: 1824px) {
   /* use mobile */
+  img{
+    max-width: 30% !important;
+    padding: 5px !important;
+  }
 }
