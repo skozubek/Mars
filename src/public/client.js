@@ -12,7 +12,7 @@ const updateStore = (newState) => {
   store = Object.assign(store, newState);
   render(root, store);
 };
-
+// main render
 const render = async (root, state) => {
   root.innerHTML = App(state);
 };
@@ -93,7 +93,7 @@ const renderImages = (images) => {
     const renderImgUrls = () => {
       // USE MAP to convert urls into html tags
       const imgTags = imgUrls.map((url) => `<img src="${url}" />`);
-      return imgTags[0];
+      return imgTags.slice(0, 6).join('');
     };
     // return function rendering img html tags
     return renderImgUrls;
