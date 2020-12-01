@@ -127,8 +127,7 @@ window.addEventListener('load', () => {
 });
 // API call to get select rover's data
 const getRoverData = (selectedRover) => {
-  const url = new URL('http://localhost:3000/rovers');
-  url.searchParams.append('name', selectedRover);
+  const url = `/rovers?name=${selectedRover}`;
   fetch(url)
     .then((res) => res.json())
     .then((latestPhotos) => updateStore({ latestPhotos, selectedRover }));
