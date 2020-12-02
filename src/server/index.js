@@ -26,7 +26,7 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 app.get('/apod', async (req, res) => {
   try {
     const image = await fetch(
-      `https://api.nasa.gov/planetary/apod?api_key=AZ6takwLFX1CPatIIRa55vYmZI5idA13pcPuqoLE`
+      `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
     ).then((res) => res.json());
     res.send({ image });
   } catch (err) {
@@ -37,7 +37,7 @@ app.get('/apod', async (req, res) => {
 app.get('/rovers', async (req, res) => {
   try {
     const { name } = req.query;
-    const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${name}/latest_photos?api_key=${process.env.API_KEY}`;
+    const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${name}/latest_photos?api_key=AZ6takwLFX1CPatIIRa55vYmZI5idA13pcPuqoLE`;
     const photos = await fetch(url).then((res) => res.json());
     res.send({ photos });
   } catch (err) {
