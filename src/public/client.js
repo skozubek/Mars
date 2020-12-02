@@ -68,6 +68,7 @@ const renderHeader = (rovers, selectedRover) => {
 
 // Pure function that renders selected rover's base data
 const renderRoverBaseData = (roverName, latestPhotos) => {
+  console.log(roverName, latestPhotos);
   if (roverName !== '') {
     const baseData = latestPhotos.photos.latest_photos[0];
     return `
