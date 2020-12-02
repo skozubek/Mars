@@ -16,43 +16,52 @@ const updateStore = (newState) => {
 const render = async (root, state) => {
   root.innerHTML = App(state);
 };
-// Pure function that renders list of rovers to choose from
+// Pure function that renders list of rovers after Curiosity was selected
+const renderCuriosityList = (rovers) => `
+            <select name="rovers" id="rovers" onchange="selectRover()">
+              <option value="${rovers.get(0)}">${rovers.get(0)}</option>
+              <option value="${rovers.get(1)}">${rovers.get(1)}</option>
+              <option value="${rovers.get(2)}">${rovers.get(2)}</option>
+            </select>
+            `;
+// Pure function that renders list of rovers after Opportunity was selected
+const renderOpportunityList = (rovers) => `
+          <select name="rovers" id="rovers" onchange="selectRover()">
+            <option value="${rovers.get(1)}">${rovers.get(1)}</option>
+            <option value="${rovers.get(0)}">${rovers.get(0)}</option>
+            <option value="${rovers.get(2)}">${rovers.get(2)}</option>
+          </select>
+          `;
+// Pure function that renders list of rovers after Spirit was selected
+const renderSpiritList = (rovers) => `
+          <select name="rovers" id="rovers" onchange="selectRover()">
+            <option value="${rovers.get(2)}">${rovers.get(2)}</option>
+            <option value="${rovers.get(0)}">${rovers.get(0)}</option>
+            <option value="${rovers.get(1)}">${rovers.get(1)}</option>
+          </select>
+        `;
+// Pure function that renders list of rovers after Spirit was selected
+const renderDefaultList = (rovers) => `
+          <select name="rovers" id="rovers" onchange="selectRover()">
+            <option value="">select rover</option>
+            <option value="${rovers.get(0)}">${rovers.get(0)}</option>
+            <option value="${rovers.get(1)}">${rovers.get(1)}</option>
+            <option value="${rovers.get(2)}">${rovers.get(2)}</option>
+          </select>
+        `;
+// Function that renders list of rovers to choose from
+// based on selected rover or default
 const renderRoversList = (rovers, selectedRover) => {
   if (selectedRover === 'curiosity') {
-    return `
-              <select name="rovers" id="rovers" onchange="selectRover()">
-                <option value="${rovers.get(0)}">${rovers.get(0)}</option>
-                <option value="${rovers.get(1)}">${rovers.get(1)}</option>
-                <option value="${rovers.get(2)}">${rovers.get(2)}</option>
-              </select>
-            `;
+    return `${renderCuriosityList(rovers)}`;
   }
   if (selectedRover === 'opportunity') {
-    return `
-              <select name="rovers" id="rovers" onchange="selectRover()">
-                <option value="${rovers.get(1)}">${rovers.get(1)}</option>
-                <option value="${rovers.get(0)}">${rovers.get(0)}</option>
-                <option value="${rovers.get(2)}">${rovers.get(2)}</option>
-              </select>
-            `;
+    return `${renderOpportunityList(rovers)}`;
   }
   if (selectedRover === 'spirit') {
-    return `
-              <select name="rovers" id="rovers" onchange="selectRover()">
-                <option value="${rovers.get(2)}">${rovers.get(2)}</option>
-                <option value="${rovers.get(0)}">${rovers.get(0)}</option>
-                <option value="${rovers.get(1)}">${rovers.get(1)}</option>
-              </select>
-            `;
+    return `${renderSpiritList(rovers)}`;
   }
-  return `
-              <select name="rovers" id="rovers" onchange="selectRover()">
-                <option value="">select rover</option>
-                <option value="${rovers.get(0)}">${rovers.get(0)}</option>
-                <option value="${rovers.get(1)}">${rovers.get(1)}</option>
-                <option value="${rovers.get(2)}">${rovers.get(2)}</option>
-              </select>
-            `;
+  return `${renderDefaultList(rovers)}`;
 };
 // Pure function that renders header
 const renderHeader = (rovers, selectedRover) => {
