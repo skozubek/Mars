@@ -26,7 +26,7 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 app.get('/apod', async (req, res) => {
   try {
     const image = await fetch(
-      `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
+      `https://api.nasa.gov/planetary/apod?api_key=AZ6takwLFX1CPatIIRa55vYmZI5idA13pcPuqoLE`
     ).then((res) => res.json());
     res.send({ image });
   } catch (err) {
